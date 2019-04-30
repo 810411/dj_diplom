@@ -2,7 +2,7 @@
     <h2>{{ product.name }}</h2>
     <a href="{% url 'product' product.category.section.slug product.category.slug product.slug %}">
         {% if product.image %}
-            <img src="{{ product.image.url }}" width="180" alt="{{ product.name }}">
+            <img src="{{ product.image }}" width="180" alt="{{ product.name }}">
         {% endif %}
     </a>
     <form action="{% url 'create_cart' %}?product_id={{ product.id }}&next={{ request.path }}" method="post">
