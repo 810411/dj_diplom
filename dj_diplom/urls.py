@@ -31,4 +31,4 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('order/', order_view, name='order'),
     path('', home_view, name='home'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

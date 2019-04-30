@@ -36,7 +36,8 @@ class Product(models.Model):
         related_name='products', on_delete=models.PROTECT, verbose_name='Категория'
     )
     slug = models.SlugField(max_length=128, unique=True)
-    image = models.ImageField(upload_to='img/products/', blank=True, verbose_name='Изображение')
+    image = models.URLField(default=False, verbose_name='ССылка на изображение')
+    # image = models.ImageField(upload_to='img/products/', blank=True, verbose_name='Изображение')
     description = models.CharField(max_length=256, verbose_name='Описание')
 
     class Meta:
