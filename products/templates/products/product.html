@@ -36,6 +36,7 @@
                         <div class="form-group">
                             <label for="content">{{ form.content.label }}</label>
                             {{ form.content }}
+                            {{ form.content.errors }}
                         </div>
                         {% for radio in form.rating %}
                             <div class="form-check">

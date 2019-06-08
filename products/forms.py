@@ -3,6 +3,7 @@ from django import forms
 
 class ReviewForm(forms.Form):
     name = forms.CharField(
+        min_length=2,
         max_length=128,
         label='Имя',
         widget=forms.TextInput(
@@ -36,3 +37,16 @@ class ReviewForm(forms.Form):
             }
         )
     )
+
+    def clean_content(self):
+        content = self.cleaned_data['content']
+
+        if content:
+            words = content.split(' ')
+
+            if len(words) < 2 or len(words) == len(list(filter(lambda x: len(x) == 1, words))):
+                raise forms.ValidationError(
+                    'Отзыв должен содержать развернутое мнение о товаре'
+                )
+
+        return content
