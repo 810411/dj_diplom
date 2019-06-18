@@ -21,11 +21,6 @@ class Customer(models.Model):
         if created and instance.email:
             Customer.objects.create(user=instance)
 
-    # @receiver(post_save, sender=User)
-    # def save_user_customer(sender, instance, **kwargs):
-    #     if hasattr(instance, 'customer') and instance.email:
-    #         instance.customer.save()
-
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, related_name='customer',
