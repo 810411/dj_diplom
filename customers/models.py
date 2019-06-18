@@ -8,24 +8,23 @@ from products.models import Product
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
-    email = models.EmailField(verbose_name='Адрес электронной почты', unique=True)
 
     class Meta:
         verbose_name = 'Покупатель'
         verbose_name_plural = 'Покупатели'
 
     def __str__(self):
-        return self.email
+        return self.user.email
 
     @receiver(post_save, sender=User)
     def create_user_customer(sender, instance, created, **kwargs):
         if created and instance.email:
-            Customer.objects.create(user=instance, email=instance.email)
+            Customer.objects.create(user=instance)
 
-    @receiver(post_save, sender=User)
-    def save_user_customer(sender, instance, **kwargs):
-        if hasattr(instance, 'customer') and instance.email:
-            instance.customer.save()
+    # @receiver(post_save, sender=User)
+    # def save_user_customer(sender, instance, **kwargs):
+    #     if hasattr(instance, 'customer') and instance.email:
+    #         instance.customer.save()
 
 
 class Order(models.Model):

@@ -15,13 +15,13 @@ class CustomerLoginForm(forms.Form):
         password = self.cleaned_data.get('password')
 
         if email and password:
-            customer = Customer.objects.filter(email=email).first()
+            customer = User.objects.filter(email=email).first()
 
             if not customer:
                 raise forms.ValidationError('Покупатель с таким адресом email не зарегистрирован')
 
             else:
-                username = customer.user.username
+                username = customer.username
 
                 user = authenticate(username=username, password=password)
 
@@ -60,7 +60,7 @@ class CustomerRegisterForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
 
-        if Customer.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError(
                 'Пользователь с таким email уже зарегистрирован'
             )

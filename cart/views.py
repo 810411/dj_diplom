@@ -15,34 +15,22 @@ def create_or_update_cart_view(request):
     next_ = request.GET.get('next')
 
     if request.method == 'POST':
-        customer_pk = request.user.customer.pk
         product_pk = request.GET.get('product_id')
 
-        if f'customer-{customer_pk}' not in request.session:
-            request.session[f'customer-{customer_pk}'] = {
-                'cart': {}
-            }
+        if 'cart' not in request.session:
+            request.session['cart'] = {}
 
-        customer_session = request.session.get(f'customer-{customer_pk}')
+        cart = request.session.get('cart')
 
-        if 'cart' in customer_session:
-            cart = customer_session['cart']
-
-            if product_pk not in cart:
-                cart[product_pk] = {
-                    'quantity': 0
-                }
-
+        if product_pk in cart:
             cart[product_pk]['quantity'] += 1
 
         else:
-            customer_session['cart'] = {
-                product_pk: {
-                    'quantity': 1
-                }
+            cart[product_pk] = {
+                'quantity': 1
             }
 
-        request.session.modified = True
+    request.session.modified = True
 
     return redirect(next_)
 
@@ -51,20 +39,22 @@ def create_or_update_cart_view(request):
 @user_passes_test(customer_check, login_url='login')
 def cart_view(request):
     next_ = request.GET.get('next')
-    customer_pk = request.user.customer.pk
 
     context = {
         'next': next_,
     }
 
-    customer_session = request.session.get(f'customer-{customer_pk}', None)
+    cart = request.session.get('cart', None)
 
-    if customer_session:
-        cart = customer_session['cart']
-        products = Product.objects.filter(pk__in=cart.keys())
+    if cart:
+        products = {}
+        product_list = Product.objects.filter(pk__in=cart.keys()).values('id', 'name', 'description')
+
+        for product in product_list:
+            products[str(product['id'])] = product
 
         for key in cart.keys():
-            cart[key]['product'] = products.get(pk=key)
+            cart[key]['product'] = products[key]
 
         context['cart'] = cart
 

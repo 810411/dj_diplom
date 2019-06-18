@@ -37,7 +37,7 @@
                 {% endif %}
             {% endfor %}
         </ul>
-        {% if user.is_authenticated and user.customer.email %}
+        {% if user.is_authenticated and user.email %}
             <div class="mr-3 my-2 my-sm-0 text-light">
                 {{ user.email }}
             </div>
@@ -46,7 +46,7 @@
            href="{% url 'cart' %}?next={{ request.path }}">
             Корзина
         </a>
-        {% if user.is_authenticated and user.customer.email  %}
+        {% if user.is_authenticated and user.email  %}
             <a class="btn btn-outline-success ml-2 my-2 my-sm-0" role="button"
                href="{% url 'logout' %}">
                 Выйти

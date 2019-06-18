@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
 from django.contrib import messages
 
 from .models import Customer, Order, ProductsInOrder
@@ -19,8 +20,8 @@ def login_view(request):
         email = data['email']
         password = data['password']
 
-        customer = Customer.objects.get(email=email)
-        username = customer.user.username
+        user = User.objects.get(email=email)
+        username = user.username
 
         user = authenticate(username=username, password=password)
 
@@ -28,9 +29,7 @@ def login_view(request):
         next_post = request.POST.get('next')
         redirect_path = next_ or next_post or 'home'
 
-        request.session[f'customer-{customer.pk}'] = {
-            'cart': {}
-        }
+        request.session['cart'] = {}
 
         return redirect(redirect_path)
 
@@ -41,10 +40,8 @@ def login_view(request):
 
 @login_required(login_url='login')
 def logout_view(request):
-    customer = Customer.objects.get(user=request.user)
-
     try:
-        del request.session[f'customer-{customer.pk}']
+        del request.session['cart']
     except KeyError:
         pass
 
@@ -73,7 +70,7 @@ def order_view(request):
         customer_pk = request.user.customer.pk
         customer = Customer.objects.get(pk=customer_pk)
 
-        cart = request.session[f'customer-{customer_pk}']['cart']
+        cart = request.session['cart']
 
         if len(cart) > 0:
             order = Order.objects.create(customer=customer)
@@ -83,7 +80,7 @@ def order_view(request):
                 quantity = value['quantity']
                 ProductsInOrder.objects.create(order=order, product=product, quantity=quantity)
 
-            request.session[f'customer-{customer_pk}']['cart'] = {}
+            request.session['cart'] = {}
             request.session.modified = True
 
             messages.success(request, 'Заказ принят')

@@ -13,7 +13,7 @@ def product_list_view(request, section_slug=None, category_slug=None):
 
     if section_slug and category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-        products = category.products.all()
+        products = list(category.products.all())
         category_name = category.name.capitalize()
 
     page = request.GET.get('page')
