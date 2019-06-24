@@ -124,3 +124,6 @@ dmypy.json
 
 # idea dirs
 .idea/
+
+# local settings file
+settings_local.py
