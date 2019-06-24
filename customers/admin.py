@@ -17,8 +17,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = (ProductsInOrderInline,)
 
     def quantity(self, obj):
-        products = ProductsInOrder.objects.filter(order=obj)
-        return len(products)
+        return ProductsInOrder.objects.filter(order=obj).count()
 
     quantity.short_description = 'Количество позиций'
 

@@ -33,7 +33,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f'{self.customer.email} - {self.created}'
+        return f'{self.customer} - {self.created}'
 
 
 class ProductsInOrder(models.Model):
